@@ -9,5 +9,13 @@
 <body>
     <h1>Welcome to the Home Page</h1>
     <p>This is a simple Flask application.</p>
+
+    <ul>
+        {% for flower, details in flowers.items() %}
+            <li>{{ flower }} - ${{ details.price }} (stock: {{ details.stock }})</li>
+        {% endfor %}
+
+    </ul>
+
 </body>
 </html>
