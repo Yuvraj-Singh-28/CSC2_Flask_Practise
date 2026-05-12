@@ -5,18 +5,20 @@ app = Flask(__name__)
 app.secret_key = 'mysecretkey'
 
 def load_data():
-    with open('data/flowers.json') as file:
+    with open('data/flower.json') as file:
      flowers = json.load(file)
      return flowers
-    
-@app.route('/')
-def index():
- return render_template('index.html')
+ 
+def load_addons():
+    with open('data/addons.json') as file:
+     addons = json.load(file)
+     return addons
 
 @app.route('/')
 def index():
- flowers = load_data()
- return render_template('index.html', flowers=flowers)
+    flowers = load_data()
+    addons = load_addons()
+    return render_template('index.html', flowers=flowers, addons=addons)
 
 
 # This is the last line of the code.
