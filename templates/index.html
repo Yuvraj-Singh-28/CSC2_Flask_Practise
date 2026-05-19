@@ -1,62 +1,116 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="static/css/style.css">
-</head>
-<body>
-    <br>
-    <br>
-    <br>
-    <br>
-    <h1>Welcome to the Home Page</h1>
-    <p>This is a simple Flask application.</p>
+{% extends "base.html" %}
 
-   
+{% block title %}Bloom Basket | Fresh Flowers{% endblock %}
 
-     <form action="{{ url_for('add_to_cart' )}}" method="post">
-        <fieldset>
-             <legend for="flower">Select Flowers</legend>
-             <select name="flower" id="flower">
-            {% for flower, details in flowers.items() %}
-            <option value="{{ flower }}">{{ flower }} - ${{ details['price'] }}</option>
-            {% endfor %}
-             </select>
-                <label for="quantity">Quantity</label>
-                    <input type="number" name="quantity" value="1" min="1">
-             <button type="submit">Add to cart</button>
-            </fieldset>
-     </form>
-     {% with messages = get_flashed_messages() %}
-        {% if messages %}
-        <ul class="flashes">
+{% block content %}
+<section class="hero">
+    <div class="hero-copy">
+        <p class="eyebrow">Fresh daily arrangements</p>
+        <h1>Build a brighter flower order.</h1>
+        <p>Choose your stems, add the quantity you need, and add extras for your order.</p>
+    </div>
+    <div class="hero-panel">
+        <span class="hero-number">{{ flowers|length }}</span>
+        <span>flower varieties ready today</span>
+    </div>
+</section>
+
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <div class="flashes" role="status">
             {% for message in messages %}
-            <li>{{ message }}</li>
+                <p>{{ message }}</p>
             {% endfor %}
-            </ul>
-            {% endif %}
-        {% endwith %}
-    <div class="cart"   >
-        <h2>Your Cart</h2>
-        {% set cart = cart|default({}) %}
-        <ul>
-        {% if cart %}
+        </div>
+    {% endif %}
+{% endwith %}
 
-        {% for item, details in cart.items() %}
-        <li>{{ item }}: {{ details['quantity'] }} 
-     ${{ details['price'] }}
-     = ${{ details['quantity'] * details['price'] }}
-     <a href="{{ url_for('remove_from_cart', item=item) }}">Remove</a>
-     </li>
-     {% endfor %}
-     </ul>
-     {% else %}
-     <p>Your cart is empty</p>
-        {% endif %}
+<section class="shop-layout">
+    <div id="products" class="products-section">
+        <div class="section-heading">
+            <p class="eyebrow">Shop</p>
+            <h2>Products</h2>
+        </div>
+
+        <div class="product-grid">
+            {% for flower, details in flowers.items() %}
+                <form class="product-card" action="{{ url_for('add_to_cart') }}" method="post">
+                    <input type="hidden" name="flower" value="{{ flower }}">
+
+                    <div class="product-card-top">
+                        <div>
+                            <p class="product-name">{{ flower }}</p>
+                            <p class="product-stock">{{ details.stock }} in stock</p>
+                        </div>
+                        <p class="product-price">${{ details.price }}</p>
+                    </div>
+
+                    <div class="product-actions">
+                        <label>
+                            Quantity
+                            <input type="number" name="quantity" value="1" min="1">
+                        </label>
+                        <button type="submit">Add to cart</button>
+                    </div>
+                </form>
+            {% endfor %}
+        </div>
+
+        <div class="section-heading addons-heading">
+            <p class="eyebrow">Extras</p>
+            <h2>Add-ons</h2>
+        </div>
+
+        <form class="addon-card" action="{{ url_for('add_to_cart') }}" method="post">
+            <div class="addon-options">
+                {% for addon, details in addons.items() %}
+                    <label class="addon-option">
+                        <input type="checkbox" name="addons" value="{{ addon }}">
+                        <span>{{ addon }}</span>
+                        <strong>+${{ details.price }}</strong>
+                    </label>
+                {% endfor %}
+            </div>
+
+            <button class="addon-submit" type="submit">Add selected add-ons</button>
+        </form>
     </div>
 
+    <aside id="cart" class="cart">
+        <div class="section-heading compact">
+            <p class="eyebrow">Checkout</p>
+            <h2>Your Cart</h2>
+        </div>
 
-</body>
-</html>
+        {% if cart %}
+            <div class="cart-items">
+                {% for item, details in cart.items() %}
+                    <div class="cart-row">
+                        <div>
+                            <p>{{ item }}</p>
+                            <span>{{ details.quantity }} x ${{ details.price }}</span>
+                        </div>
+                        <div class="cart-row-actions">
+                            <strong>${{ details.quantity * details.price }}</strong>
+                            <a href="{{ url_for('remove_item_from_cart', item=item) }}">Remove</a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div class="cart-totals">
+                <p><span>Subtotal</span><strong>${{ totals.subtotal }}</strong></p>
+                <p class="total"><span>Total</span><strong>${{ totals.total }}</strong></p>
+            </div>
+
+            <form action="{{ url_for('clear_cart') }}" method="post">
+                <button class="secondary-button" type="submit">Clear cart</button>
+            </form>
+            <br>
+            <button class="secondary-button" type="submit">Place Order</button>
+        {% else %}
+            <p class="empty-cart">Your cart is empty.</p>
+        {% endif %}
+    </aside>
+</section>
+{% endblock %}
