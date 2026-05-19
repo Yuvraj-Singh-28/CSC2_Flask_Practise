@@ -31,6 +31,18 @@ def index():
 @app.route("/remove_from_cart")
 def remove_from_cart():
     return render_template("test.html")
+@app.route('remove_from_cart/<item>')
+def remove_item_from_cart(item):
+    cart = session.get('cart', {})
+    
+    if item in cart:
+        del cart[item]
+        session['cart'] = cart
+        session.modified = True
+        flash(f"{item} removed from cart.")
+    else:
+        flash(f"{item} not found in cart.")
+    return redirect(url_for('index'))
 
 @app.route('/add_to_cart', methods=['POST'])
 def add_to_cart():
