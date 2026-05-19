@@ -4,6 +4,7 @@ body {
     min-height: 100vh;
     background: linear-gradient(180deg, #eff1ed 0%, #013412 100%);
     color: #373d20;
+    text-align: center;
 }
 
 h1 {
@@ -84,4 +85,21 @@ body::before {
         padding: 16px 18px;
         border-radius: 14px;
     }
+}
+.cart {
+    text-align: center;
+    width: auto;
+    height: auto;
+   
+    box-shadow: 0 4px 8px rgba(40, 54, 24, 0.2);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+a{
+    text-decoration: none;
+    color: #283618;
+    background-color: #013412;
+    padding: 10px 20px;
+    border-radius: 8px;
+    margin: 10px;
+    color: white;
 }
