@@ -1,0 +1,38 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="static/css/style.css">
+</head>
+<body>
+    <br>
+    <br>
+    <br>
+    <br>
+    <h1>Welcome to the Home Page</h1>
+    <p>This is a simple Flask application.</p>
+
+    <ul>
+        {% for flower, details in flowers.items() %}
+            <li>{{ flower }} - ${{ details.price }} (stock: {{ details.stock }})</li>
+        {% endfor %}
+
+    </ul>
+        
+    <h3>Add-ons:</h3>
+    <br>
+    <ul>
+        {% for addons, details in addons.items() %}
+            <li>{{ addons }} - ${{ details.price }}</li>
+        {% endfor %}
+
+     </ul>
+
+    
+
+
+</body>
+</html>
